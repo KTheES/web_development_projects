@@ -3,7 +3,8 @@ import { getCars, deleteCar } from "../api/carapi";
 import { DataGrid , GridCellParams, GridColDef} from "@mui/x-data-grid";
 import { Snackbar } from "@mui/material";
 import { useState } from "react";
-import AddCar from "./Addcar";
+import AddCar from "./AddCar";
+import EditCar from "./EditCar";
 // DataGrid : data를 격자 형식으로 표현해줍니다.
 
 function Carlist() {
@@ -36,6 +37,15 @@ function Carlist() {
     {field: 'price', headerName: "Price", width: 200},
     {
       field: 'edit',
+      headerName: '',
+      width: 90,
+      sortable: false,
+      disableColumnMenu: true,
+      renderCell: (params: GridCellParams) =>
+        <EditCar cardata={params.row}/>   // EditCar의 setCar부분 : cardata = row return 
+    },//gridful definition
+    {
+      field: 'delete',
       headerName: '',
       width: 90,
       sortable: false,
