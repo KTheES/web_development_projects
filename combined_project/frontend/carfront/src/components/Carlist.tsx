@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getCars, deleteCar } from "../api/carapi";
-import { DataGrid , GridCellParams, GridColDef} from "@mui/x-data-grid";
+import { DataGrid , GridCellParams, GridColDef, GridToolbar} from "@mui/x-data-grid";
 import { Snackbar } from "@mui/material";
-import { useState } from "react";
+import IconButton  from "@mui/material/IconButton";   // 작성법 바뀌어서 수정하였습니다.
+import DeleteIcon from "@mui/icons-material/Delete";   // 작성법 바뀌어서 수정하였습니다.
 import AddCar from "./AddCar";
 import EditCar from "./EditCar";
 // DataGrid : data를 격자 형식으로 표현해줍니다.
@@ -52,15 +54,24 @@ function Carlist() {
       filterable: false,
       disableColumnMenu: true,
       renderCell: (params: GridCellParams) => 
-        <button 
+        <IconButton aria-label='delete' size='small'
           onClick={() => {
-            // js의 `` 사용했습니다.
-            if(window.confirm(`${params.row.brand}의 ${params.row.model}을 삭제하시겠습니까?`)) { // 기본 윈도우 알림창을 사용합니다.
-              mutate(params.row._links.car.href)}}    // 그렇다면 지웁니다.
-            }
-        >
-          삭제
-        </button>
+            if (window.confirm(`${params.row.brand}의 ${params.row.model}을 삭제하시겠습니까?`)) 
+                    mutate(params.row._links.car.href)
+          }}>
+            // 여기 부분이 조금 달라졌습니다.
+            <DeleteIcon fontSize='small' />
+          </IconButton>
+
+        // <button 
+        //   onClick={() => {
+        //     // js의 `` 사용했습니다.
+        //     if(window.confirm(`${params.row.brand}의 ${params.row.model}을 삭제하시겠습니까?`)) { // 기본 윈도우 알림창을 사용합니다.
+        //       mutate(params.row._links.car.href)}}    // 그렇다면 지웁니다.
+        //     }
+        // >
+        //   삭제
+        // </button>
     }
   ]
 
@@ -75,7 +86,8 @@ function Carlist() {
           rows={data}
           columns={columns}
           getRowId={row => row._links.self.href}
-          // disableRowSelectionOnClick={true}
+          disableRowSelectionOnClick={true}
+          slots={{toolbar: GridToolbar}}
         />
 
         <Snackbar
